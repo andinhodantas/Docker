@@ -1,0 +1,49 @@
+version: "3.9"
+services:
+  nginx:
+    image: denirow/prog-redes:latest
+    container_name: prog-redes
+    ports:
+      - 8081:80
+    mem_limit: "1G" #limite de memoria
+    environment:
+      - VAR1=teste_var1
+      - VAR2=teste_var2
+    networks:
+      - minha_rede_teste
+
+  bd:
+    image: postgres:latest
+    container_name: banco_postgres
+    ports:
+      - 5454:5432
+    mem_limit: "1G"
+    networks:
+      - minha_rede_teste
+    environment:
+      - POSTGRES_PASSWORD=abc@123 #senha do postegres
+  
+  meu_site:
+    image: nginx:latest
+    container_name: meu_site_compose
+    ports:
+      - 8182:80
+    mem_limit: "1G"
+    networks:
+      - minha_rede_teste
+    environment:
+      - POSTGRES_PASSWORD=abc@123 #senha do postegres
+  
+  site:
+    image: nginx:latest
+    container_name: meu_site
+    ports:
+      - 7777:80
+    mem_limit: "1G"
+    networks:
+      - minha_rede_teste
+    volumes:
+      - ./html:/usr/share/nginx/html
+      
+networks:
+  minha_rede_teste:
